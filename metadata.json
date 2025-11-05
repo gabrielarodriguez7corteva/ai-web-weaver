@@ -1,0 +1,5 @@
+{
+  "name": "Copy of AI Web Weaver",
+  "description": "An AI-powered web page generator. Describe your ideal webpage in plain English, and AI Web Weaver will use Gemini to generate the HTML and Tailwind CSS code, providing a live preview and the source for you to use.",
+  "requestFramePermissions": []
+}

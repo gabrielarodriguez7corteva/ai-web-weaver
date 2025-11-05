@@ -1,0 +1,32 @@
+steps:
+# 1. Build the Docker image with the API_KEY build-arg
+- name: 'gcr.io/cloud-builders/docker'
+  args: [
+    'build',
+    '--build-arg', 'API_KEY=${_API_KEY}',
+    '-t', 'us-central1-docker.pkg.dev/$PROJECT_ID/my-react-app/ai-web-weaver:latest',
+    '.'
+  ]
+
+# 2. Push the Docker image to Artifact Registry
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['push', 'us-central1-docker.pkg.dev/$PROJECT_ID/my-react-app/ai-web-weaver:latest']
+
+# 3. Deploy the image to Cloud Run
+- name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+  entrypoint: 'gcloud'
+  args:
+    - 'run'
+    - 'deploy'
+    - 'ai-web-weaver'
+    - '--image=us-central1-docker.pkg.dev/$PROJECT_ID/my-react-app/ai-web-weaver:latest'
+    - '--region=us-central1'
+    - '--platform=managed'
+    - '--allow-unauthenticated' # Make the service publicly accessible
+
+# Specify the image to be pushed to the registry
+images:
+- 'us-central1-docker.pkg.dev/$PROJECT_ID/my-react-app/ai-web-weaver:latest'
+
+options:
+  logging: CLOUD_LOGGING_ONLY
