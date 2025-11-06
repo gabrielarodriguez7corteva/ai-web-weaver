@@ -22,12 +22,30 @@ This project was created for the purposes of entering the **#CloudRunHackathon**
 
 ### Architecture Diagram
 
-```
-[User's Browser] <--> [React Frontend (Nginx on Google Cloud Run)] <--> [Google Gemini API]
-      |                                  |
-      |---(Enters Prompt)----------------|
-      |                                  |
-      |<--(Renders HTML/CSS)-------------|
+```mermaid
+graph LR
+    User([fa:fa-user User in Browser])
+    GeminiApi([fa:fa-robot Google Gemini API])
+
+    %% Use a subgraph for the Google Cloud boundary
+    subgraph Google Cloud Platform
+        direction TB
+        %% FIX: Wrapped the text in double quotes
+        Frontend["Cloud Run: Frontend Service <br/> (React UI)"]
+        Backend["Cloud Run: Backend Service <br/> (Node.js API & API Key)"]
+    end
+
+    %% Define the numbered arrows for data flow
+    User -- "1. Enters Prompt" --> Frontend
+    Frontend -- "2. Sends prompt to backend" --> Backend
+    Backend -- "3. Securely calls Gemini API" --> GeminiApi
+    GeminiApi -- "4. Returns HTML" --> Backend
+    Backend -- "5. Sends HTML to frontend" --> Frontend
+    Frontend -- "6. Renders Live Preview" --> User
+
+    %% Style the nodes
+    style Backend fill:#e6f2ff,stroke:#4285F4,stroke-width:2px
+    style Frontend fill:#e6f2ff,stroke:#4285F4,stroke-width:2px
 ```
 
 The application is a single-page application (SPA) built into static assets and served by an Nginx web server inside a Docker container on Cloud Run. Client-side logic handles the API call to Gemini.

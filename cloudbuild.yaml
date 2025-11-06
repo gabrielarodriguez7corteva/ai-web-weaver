@@ -22,7 +22,8 @@ steps:
     - '--image=us-central1-docker.pkg.dev/$PROJECT_ID/my-react-app/ai-web-weaver:latest'
     - '--region=us-central1'
     - '--platform=managed'
-    - '--allow-unauthenticated' # Make the service publicly accessible
+    - '--allow-unauthenticated'
+    - '--port=80'  # Make the service publicly accessible
 
 # Specify the image to be pushed to the registry
 images:

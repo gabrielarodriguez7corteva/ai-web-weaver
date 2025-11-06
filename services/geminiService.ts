@@ -6,12 +6,12 @@ let aiInstance: GoogleGenAI | null = null;
 
 const getAiInstance = () => {
     if (!aiInstance) {
-        // Fix: Use process.env.API_KEY directly to initialize GoogleGenAI as per coding guidelines.
-        if (!process.env.API_KEY) {
+     const apiKey = import.meta.env.VITE_API_KEY;
+        if (!apiKey) {
             // This provides a clear runtime error if the key wasn't set at build time.
             throw new Error("Gemini API key is not configured. Please ensure the API_KEY environment variable is set.");
         }
-        aiInstance = new GoogleGenAI({ apiKey: process.env.API_KEY });
+        aiInstance = new GoogleGenAI({ apiKey });
     }
     return aiInstance;
 };
@@ -41,7 +41,7 @@ export const generateWebpageCode = async (prompt: string): Promise<string> => {
         }
     });
 
-    let code = response.text.trim();
+    let code = response.text?.trim() ?? '';
     
     // The model might wrap the code in markdown fences, so we strip them.
     if (code.startsWith('```html')) {
